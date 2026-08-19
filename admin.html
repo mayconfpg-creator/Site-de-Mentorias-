@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Painel de Gestão VIP | Déborah Loures Mentorias</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Supabase JS Client Oficial (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            background-color: #0F0E0D;
+            color: #E2DBD5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 30px;
+        }
+
+        /* TELA DE LOGIN */
+        .login-wrapper {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: #181614;
+            border: 1.5px solid var(--border-gold);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .login-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #DFC8A8, #B8976C);
+            color: #12100E;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px var(--gold-glow);
+        }
+
+        .login-card h2 {
+            font-size: 22px;
+            color: #FFFFFF;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .login-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .login-input-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .login-input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #D6CCC2;
+        }
+
+        .login-input-wrap {
+            position: relative;
+        }
+
+        .login-input-wrap input {
+            width: 100%;
+            background: #24201D;
+            border: 1.5px solid rgba(184, 151, 108, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px 12px 38px;
+            font-size: 14px;
+            color: #FFF;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .login-input-wrap input:focus {
+            border-color: var(--primary);
+            background: #2A2522;
+            box-shadow: 0 0 10px rgba(184, 151, 108, 0.25);
+        }
+
+        .login-input-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-light);
+            font-size: 14px;
+        }
+
+        /* DASHBOARD ADMIN WORKSPACE */
+        .dashboard-wrapper {
+            display: none;
+            width: 100%;
+            padding: 24px 0;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-header-bar {
+            background: #181614;
+            border: 1px solid rgba(184, 151, 108, 0.25);
+            border-radius: var(--radius-lg);
+            padding: 18px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            overflow: hidden;
+            background: #24201D;
+        }
+
+        .admin-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .admin-stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card-admin {
+            background: #181614;
+            border: 1px solid rgba(184, 151, 108, 0.2);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            transition: 0.2s;
+        }
+
+        .stat-card-admin:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .stat-card-admin .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-light);
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .stat-card-admin .val {
+            font-size: 26px;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+
+        /* TABS DE NAVEGAÇÃO */
+        .admin-nav-tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .admin-nav-btn {
+            background: #181614;
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            color: #D6CCC2;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .admin-nav-btn:hover {
+            border-color: var(--primary);
+            color: #FFF;
+        }
+
+        .admin-nav-btn.active {
+            background: linear-gradient(135deg, #DFC8A8, #B8976C);
+            color: #12100E;
+            border-color: var(--primary-light);
+            font-weight: 800;
+        }
+
+        .admin-card-surface {
+            background: #181614;
+            border: 1px solid rgba(184, 151, 108, 0.25);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        /* FORMULÁRIO DE EDIÇÃO NO ADMIN */
+        .admin-form-group {
+            margin-bottom: 18px;
+        }
+
+        .admin-form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #E2DBD5;
+            margin-bottom: 6px;
+        }
+
+        .admin-form-group input, 
+        .admin-form-group textarea, 
+        .admin-form-group select {
+            width: 100%;
+            background: #24201D;
+            border: 1.5px solid rgba(184, 151, 108, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 11px 14px;
+            font-size: 13.5px;
+            color: #FFFFFF;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .admin-form-group input:focus, 
+        .admin-form-group textarea:focus, 
+        .admin-form-group select:focus {
+            border-color: var(--primary);
+            background: #2D2723;
+        }
+
+        /* LISTAS DINÂMICAS DE MÓDULOS E BÔNUS */
+        .dynamic-item-card {
+            background: #201D1A;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 40px;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-add-dynamic {
+            background: rgba(184, 151, 108, 0.15);
+            border: 1px dashed var(--primary);
+            color: var(--primary-light);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+
+        .btn-add-dynamic:hover {
+            background: rgba(184, 151, 108, 0.25);
+            color: #FFF;
+        }
+
+        .btn-remove-item {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #F87171;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .btn-remove-item:hover {
+            background: #EF4444;
+            color: #FFF;
+        }
+
+        /* TABELA ADMIN */
+        .admin-main-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .admin-main-table th, .admin-main-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-main-table th {
+            background: #12100E;
+            color: var(--primary-light);
+            font-weight: 800;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .admin-main-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+         TELA 1: LOGIN DE ACESSO ADMINISTRATIVO
+         ========================================================================== -->
+    <div class="login-wrapper" id="loginScreen">
+        <div class="login-card">
+            <div class="login-icon">
+                <i class="fa-solid fa-gem"></i>
+            </div>
+            <h2>Área Administrativa VIP</h2>
+            <p>Acesse o painel de gestão de cursos e alunas da Profa. Déborah Loures.</p>
+
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                <div class="login-input-group">
+                    <label for="loginUser">Usuário ou E-mail:</label>
+                    <div class="login-input-wrap">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="loginUser" required placeholder="admin ou seu e-mail" value="admin">
+                    </div>
+                </div>
+
+                <div class="login-input-group">
+                    <label for="loginPass">Senha de Acesso:</label>
+                    <div class="login-input-wrap">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="loginPass" required placeholder="Digite sua senha">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-primary" style="margin-top: 10px;" id="btnLoginSubmit">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar no Painel
+                </button>
+            </form>
+
+            <div style="margin-top: 22px; font-size: 12px; color: var(--text-muted);">
+                <a href="index.html" style="color: var(--primary-light); text-decoration: underline;">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar ao site público
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         TELA 2: DASHBOARD ADMINISTRATIVO WORKSPACE
+         ========================================================================== -->
+    <div class="dashboard-wrapper" id="dashboardScreen">
+        <div class="container">
+
+            <!-- HEADER DO DASHBOARD -->
+            <div class="admin-header-bar">
+                <div class="admin-user-info">
+                    <div class="admin-user-avatar">
+                        <img src="assets/deborah_loures.jpg" alt="Déborah Loures">
+                    </div>
+                    <div>
+                        <h2 style="font-size: 17px; color: #FFF; font-weight: 800;">Painel de Gestão VIP</h2>
+                        <span style="font-size: 11.5px; color: var(--primary-light);">Profa. Déborah Loures • Administrador</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="index.html" target="_blank" class="btn-nav-admin" style="background: rgba(184, 151, 108, 0.2); border-color: var(--primary-light); color: #FFF;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Site ao Vivo
+                    </a>
+                    <button onclick="handleAdminLogout()" class="btn-nav-admin" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #F87171;">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
+                    </button>
+                </div>
+            </div>
+
+            <!-- ESTATÍSTICAS RÁPIDAS -->
+            <div class="admin-stats-overview">
+                <div class="stat-card-admin">
+                    <div class="label">Mentorias Ativas</div>
+                    <div class="val" id="statTotalMentorias">4</div>
+                </div>
+                <div class="stat-card-admin">
+                    <div class="label">Alunas / Leads Cadastrados</div>
+                    <div class="val" id="statTotalLeads" style="color: #86EFAC;">0</div>
+                </div>
+                <div class="stat-card-admin">
+                    <div class="label">Status do Supabase</div>
+                    <div class="val" style="font-size: 16px; color: #86EFAC; display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+                        <i class="fa-solid fa-circle" style="font-size: 10px;"></i> Conectado em Nuvem
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABAS DE NAVEGAÇÃO -->
+            <div class="admin-nav-tabs">
+                <button class="admin-nav-btn active" id="tabBtn-mentorias" onclick="switchDashboardTab('mentorias')">
+                    <i class="fa-solid fa-graduation-cap"></i> Cursos & Mentorias
+                </button>
+                <button class="admin-nav-btn" id="tabBtn-novo" onclick="startNewMentoria()">
+                    <i class="fa-solid fa-plus"></i> + Nova Mentoria
+                </button>
+                <button class="admin-nav-btn" id="tabBtn-leads" onclick="switchDashboardTab('leads')">
+                    <i class="fa-solid fa-users"></i> Alunas Interessadas (Leads)
+                </button>
+                <button class="admin-nav-btn" id="tabBtn-config" onclick="switchDashboardTab('config')">
+                    <i class="fa-solid fa-gear"></i> Configurações Gerais
+                </button>
+            </div>
+
+            <!-- ==============================================================
+                 ABA 1: LISTAGEM DE CURSOS & MENTORIAS
+                 ============================================================== -->
+            <div class="admin-tab-pane" id="pane-mentorias">
+                <div class="admin-card-surface">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="font-size: 18px; color: #FFF; font-weight: 800;">Catálogo de Mentorias</h3>
+                            <p style="font-size: 12.5px; color: var(--text-muted);">Edite valores, pause ou adicione novas formações ao site em tempo real.</p>
+                        </div>
+                        <button onclick="startNewMentoria()" class="btn-submit-primary" style="width: auto; padding: 8px 18px; font-size: 12px;">
+                            <i class="fa-solid fa-plus"></i> Criar Nova Mentoria
+                        </button>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="admin-main-table">
+                            <thead>
+                                <tr>
+                                    <th>Formação</th>
+                                    <th>Categoria</th>
+                                    <th>Duração</th>
+                                    <th>Preço PIX</th>
+                                    <th>Parcelado</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashMentoriasTbody">
+                                <!-- Preenchido dinamicamente via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==============================================================
+                 ABA 2: FORMULÁRIO DE CRIAÇÃO / EDIÇÃO DE MENTORIA
+                 ============================================================== -->
+            <div class="admin-tab-pane" id="pane-editor" style="display: none;">
+                <div class="admin-card-surface">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 14px;">
+                        <div>
+                            <h3 style="font-size: 18px; color: #FFF; font-weight: 800;" id="editorFormTitle">Cadastrar Nova Mentoria</h3>
+                            <p style="font-size: 12.5px; color: var(--text-muted);">Preencha os detalhes, módulos práticos e bônus inclusos.</p>
+                        </div>
+                        <button onclick="switchDashboardTab('mentorias')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer;">
+                            <i class="fa-solid fa-arrow-left"></i> Cancelar
+                        </button>
+                    </div>
+
+                    <form id="mentoriaFullForm" onsubmit="handleSaveMentoriaFull(event)">
+                        <input type="hidden" id="formMentoriaId">
+
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+                            <div class="admin-form-group">
+                                <label>Título da Mentoria:</label>
+                                <input type="text" id="formTitulo" required placeholder="Ex: Mentoria SkinStart™: Limpeza & Fisiologia">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Slug (Identificador URL único):</label>
+                                <input type="text" id="formSlug" required placeholder="ex: skinstart">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px;">
+                            <div class="admin-form-group">
+                                <label>Categoria:</label>
+                                <input type="text" id="formCategoria" required placeholder="Ex: Formação Base">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Ícone FontAwesome:</label>
+                                <input type="text" id="formIcone" value="fa-gem" placeholder="Ex: fa-seedling">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Duração (Dias):</label>
+                                <input type="number" id="formDuracaoDias" value="1" min="1" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Carga Horária (Horas):</label>
+                                <input type="number" id="formDuracaoHoras" value="8" min="1" required>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px;">
+                            <div class="admin-form-group">
+                                <label>Preço à vista no PIX (R$):</label>
+                                <input type="number" step="0.01" id="formPrecoPix" required placeholder="1500.00">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Preço Total no Cartão (R$):</label>
+                                <input type="number" step="0.01" id="formPrecoCartao" required placeholder="1650.00">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Nº de Parcelas:</label>
+                                <input type="number" id="formParcelasQtd" value="10" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Valor de Cada Parcela (R$):</label>
+                                <input type="number" step="0.01" id="formParcelasValor" required placeholder="165.00">
+                            </div>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label>Subtítulo / Descrição Rápida:</label>
+                            <textarea id="formSubtitulo" rows="2" placeholder="Resumo dos diferenciais da mentoria..."></textarea>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label>Público-Alvo (Para quem é indicado):</label>
+                            <textarea id="formPublicoAlvo" rows="2" placeholder="Iniciantes do absoluto zero ou profissionais que..."></textarea>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label>Cálculo de Retorno Financeiro (ROI):</label>
+                            <textarea id="formRoiDescricao" rows="2" placeholder="Cobrando R$ 150 por atendimento, com 10 clientes você recupera 100%..."></textarea>
+                        </div>
+
+                        <!-- GERENCIADOR DE MÓDULOS DA GRADE -->
+                        <div style="margin-top: 28px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <h4 style="font-size: 15px; color: #FFF; font-weight: 800;"><i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Grade Curricular & Módulos Práticos</h4>
+                            </div>
+                            <div id="dynamicModulosList">
+                                <!-- Módulos dinâmicos -->
+                            </div>
+                            <button type="button" class="btn-add-dynamic" onclick="addModuloField()">
+                                <i class="fa-solid fa-plus"></i> Adicionar Tópico na Grade
+                            </button>
+                        </div>
+
+                        <!-- GERENCIADOR DE BÔNUS -->
+                        <div style="margin-top: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <h4 style="font-size: 15px; color: #FFF; font-weight: 800;"><i class="fa-solid fa-gift" style="color: var(--primary);"></i> Bônus Exclusivos Inclusos</h4>
+                            </div>
+                            <div id="dynamicBonusList">
+                                <!-- Bônus dinâmicos -->
+                            </div>
+                            <button type="button" class="btn-add-dynamic" onclick="addBonusField()">
+                                <i class="fa-solid fa-plus"></i> Adicionar Bônus VIP
+                            </button>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                            <button type="button" onclick="switchDashboardTab('mentorias')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; padding: 12px 24px; border-radius: 30px; font-weight: 700; cursor: pointer;">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn-submit-primary" style="flex: 1;" id="btnSubmitMentoria">
+                                <i class="fa-solid fa-floppy-disk"></i> Salvar Mentoria no Supabase
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ==============================================================
+                 ABA 3: LEADS & ALUNAS INTERESSADAS (CRM)
+                 ============================================================== -->
+            <div class="admin-tab-pane" id="pane-leads" style="display: none;">
+                <div class="admin-card-surface">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="font-size: 18px; color: #FFF; font-weight: 800;">Alunas Interessadas (Contatos Recebidos)</h3>
+                            <p style="font-size: 12.5px; color: var(--text-muted);">Veja todas as pessoas que solicitaram vaga pelo site e fale direto no WhatsApp.</p>
+                        </div>
+                        <button onclick="renderDashboardLeads()" class="btn-nav-admin">
+                            <i class="fa-solid fa-rotate-right"></i> Atualizar Lista
+                        </button>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="admin-main-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome da Aluna</th>
+                                    <th>WhatsApp</th>
+                                    <th>Formação Desejada</th>
+                                    <th>Data / Hora</th>
+                                    <th>Status</th>
+                                    <th>Ação Rápida</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashLeadsTbody">
+                                <!-- Preenchido dinamicamente via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==============================================================
+                 ABA 4: CONFIGURAÇÕES GERAIS DA MENTORA
+                 ============================================================== -->
+            <div class="admin-tab-pane" id="pane-config" style="display: none;">
+                <div class="admin-card-surface" style="max-width: 680px;">
+                    <h3 style="font-size: 18px; color: #FFF; font-weight: 800; margin-bottom: 6px;">Configurações Gerais da Mentora</h3>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px;">Edite as informações exibidas no cabeçalho e rodapé do site.</p>
+
+                    <form id="generalConfigForm" onsubmit="handleSaveConfig(event)">
+                        <div class="admin-form-group">
+                            <label>Nome Completo da Mentora:</label>
+                            <input type="text" id="cfgNome" value="Profa. Esp. Déborah Loures Silva Godoi" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Título / Especialidade:</label>
+                            <input type="text" id="cfgTitulo" value="Esteticista, Cosmetóloga & Skintherapyst" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>WhatsApp de Atendimento (com DDD):</label>
+                            <input type="text" id="cfgWhatsapp" value="5562991501876" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Instagram Oficial:</label>
+                            <input type="text" id="cfgInstagram" value="@dra.deborahloures">
+                        </div>
+
+                        <button type="submit" class="btn-submit-primary" style="margin-top: 10px;">
+                            <i class="fa-solid fa-floppy-disk"></i> Salvar Configurações
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPTS DO PAINEL ADMIN -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>
+
