@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Painel de Gestão VIP | Déborah Loures Mentorias</title>
+    <title>Studio de Gestão VIP | Déborah Loures Mentorias</title>
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,12 +21,12 @@
 
     <style>
         body {
-            background-color: #0F0E0D;
+            background-color: #0E0C0A;
             color: #E2DBD5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-bottom: 30px;
+            padding-bottom: 40px;
         }
 
         /* TELA DE LOGIN */
@@ -45,23 +45,23 @@
             padding: 40px 32px;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
             text-align: center;
             animation: fadeIn 0.3s ease;
         }
 
         .login-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
             background: linear-gradient(135deg, #DFC8A8, #B8976C);
             color: #12100E;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 28px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 20px var(--gold-glow);
+            box-shadow: 0 8px 25px var(--gold-glow);
         }
 
         .login-card h2 {
@@ -121,7 +121,7 @@
             font-size: 14px;
         }
 
-        /* DASHBOARD ADMIN WORKSPACE */
+        /* DASHBOARD WORKSPACE */
         .dashboard-wrapper {
             display: none;
             width: 100%;
@@ -149,8 +149,8 @@
         }
 
         .admin-user-avatar {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             border: 2px solid var(--primary);
             overflow: hidden;
@@ -163,45 +163,10 @@
             object-fit: cover;
         }
 
-        .admin-stats-overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card-admin {
-            background: #181614;
-            border: 1px solid rgba(184, 151, 108, 0.2);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            transition: 0.2s;
-        }
-
-        .stat-card-admin:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .stat-card-admin .label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--primary-light);
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-
-        .stat-card-admin .val {
-            font-size: 26px;
-            font-weight: 800;
-            color: #FFFFFF;
-        }
-
         /* TABS DE NAVEGAÇÃO */
         .admin-nav-tabs {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 12px;
             margin-bottom: 24px;
@@ -212,7 +177,7 @@
             background: #181614;
             border: 1.5px solid rgba(255, 255, 255, 0.1);
             color: #D6CCC2;
-            padding: 10px 18px;
+            padding: 10px 20px;
             border-radius: 30px;
             font-size: 13px;
             font-weight: 700;
@@ -227,6 +192,7 @@
         .admin-nav-btn:hover {
             border-color: var(--primary);
             color: #FFF;
+            background: #221E1B;
         }
 
         .admin-nav-btn.active {
@@ -234,133 +200,282 @@
             color: #12100E;
             border-color: var(--primary-light);
             font-weight: 800;
+            box-shadow: 0 4px 15px rgba(184, 151, 108, 0.25);
         }
 
-        .admin-card-surface {
+        /* ==========================================================================
+           STUDIO DE CRIAÇÃO & EDIÇÃO VIP (SPLIT SCREEN & LIVE PREVIEW)
+           ========================================================================== */
+        .studio-container {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 991px) {
+            .studio-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .studio-card-surface {
             background: #181614;
             border: 1px solid rgba(184, 151, 108, 0.25);
             border-radius: var(--radius-lg);
-            padding: 28px;
+            padding: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        /* FORMULÁRIO DE EDIÇÃO NO ADMIN */
-        .admin-form-group {
-            margin-bottom: 18px;
-        }
-
-        .admin-form-group label {
-            display: block;
-            font-size: 12.5px;
-            font-weight: 700;
-            color: #E2DBD5;
-            margin-bottom: 6px;
-        }
-
-        .admin-form-group input, 
-        .admin-form-group textarea, 
-        .admin-form-group select {
-            width: 100%;
-            background: #24201D;
-            border: 1.5px solid rgba(184, 151, 108, 0.3);
-            border-radius: var(--radius-sm);
-            padding: 11px 14px;
-            font-size: 13.5px;
-            color: #FFFFFF;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .admin-form-group input:focus, 
-        .admin-form-group textarea:focus, 
-        .admin-form-group select:focus {
-            border-color: var(--primary);
-            background: #2D2723;
-        }
-
-        /* LISTAS DINÂMICAS DE MÓDULOS E BÔNUS */
-        .dynamic-item-card {
-            background: #201D1A;
+        /* SUB-ETAPAS DO STUDIO (WIZARD INTELIGENTE) */
+        .studio-steps-nav {
+            display: flex;
+            gap: 6px;
+            background: #110F0D;
+            padding: 6px;
+            border-radius: 14px;
+            margin-bottom: 22px;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-sm);
-            padding: 12px 14px;
-            margin-bottom: 10px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 40px;
-            gap: 10px;
-            align-items: center;
+            overflow-x: auto;
         }
 
-        .btn-add-dynamic {
-            background: rgba(184, 151, 108, 0.15);
-            border: 1px dashed var(--primary);
-            color: var(--primary-light);
-            padding: 10px 16px;
-            border-radius: var(--radius-sm);
-            font-size: 12.5px;
+        .studio-step-btn {
+            flex: 1;
+            min-width: 110px;
+            background: transparent;
+            border: none;
+            color: var(--text-dimmed);
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
-            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-bottom: 20px;
-            transition: 0.2s;
+            transition: all 0.2s;
         }
 
-        .btn-add-dynamic:hover {
-            background: rgba(184, 151, 108, 0.25);
+        .studio-step-btn.active {
+            background: #24201D;
+            color: var(--primary-light);
+            border: 1px solid rgba(184, 151, 108, 0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .studio-step-section {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .studio-step-section.active {
+            display: block;
+        }
+
+        /* CHIPS DE CATEGORIAS VISUAIS */
+        .category-chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+
+        .category-chip {
+            background: #201D1A;
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            color: #D6CCC2;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .category-chip:hover {
+            border-color: var(--primary);
             color: #FFF;
         }
 
-        .btn-remove-item {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #F87171;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+        .category-chip.selected {
+            background: rgba(184, 151, 108, 0.2);
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+
+        /* GRID SELETOR DE ÍCONES VISUAIS */
+        .icon-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+            gap: 8px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+
+        .icon-opt-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #201D1A;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            color: #D6CCC2;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
+            transition: all 0.2s;
         }
 
-        .btn-remove-item:hover {
-            background: #EF4444;
+        .icon-opt-btn:hover {
+            border-color: var(--primary);
             color: #FFF;
+            transform: scale(1.08);
         }
 
-        /* TABELA ADMIN */
-        .admin-main-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
+        .icon-opt-btn.selected {
+            background: linear-gradient(135deg, #DFC8A8, #B8976C);
+            color: #12100E;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 12px var(--gold-glow);
         }
 
-        .admin-main-table th, .admin-main-table td {
-            padding: 12px 14px;
+        /* CARDS SELETORES DE DURAÇÃO */
+        .duration-card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .duration-pick-card {
+            background: #201D1A;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .admin-main-table th {
-            background: #12100E;
-            color: var(--primary-light);
-            font-weight: 800;
+        .duration-pick-card:hover {
+            border-color: var(--primary);
+        }
+
+        .duration-pick-card.selected {
+            background: rgba(184, 151, 108, 0.12);
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(184, 151, 108, 0.15);
+        }
+
+        .duration-pick-card strong {
+            display: block;
+            color: #FFF;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .duration-pick-card span {
             font-size: 11.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
+            color: var(--text-muted);
         }
 
-        .admin-main-table tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
+        /* AUTO CALCULO DE PARCELAS */
+        .calc-pricing-box {
+            background: #12100E;
+            border: 1px solid rgba(184, 151, 108, 0.2);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+
+        /* MÓDULOS E BÔNUS VISUAIS */
+        .module-item-studio {
+            background: #201D1A;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 3px solid var(--primary);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .module-item-studio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .module-item-studio-num {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* COLUNA DA DIREITA: LIVE PREVIEW STICKY */
+        .live-preview-panel {
+            position: sticky;
+            top: 20px;
+            background: #181614;
+            border: 1.5px solid var(--border-gold);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+        }
+
+        .live-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .live-preview-badge {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86EFAC;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10.5px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-preview-badge i {
+            font-size: 8px;
+            animation: pulseDot 1.5s infinite;
+        }
+
+        /* MODO PREVIEW DO CARD EM TEMPO REAL */
+        .preview-card-container {
+            background: #FFF;
+            border-radius: var(--radius-md);
+            padding: 22px;
+            color: var(--text-dark);
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -375,12 +490,12 @@
             <div class="login-icon">
                 <i class="fa-solid fa-gem"></i>
             </div>
-            <h2>Área Administrativa VIP</h2>
-            <p>Acesse o painel de gestão de cursos e alunas da Profa. Déborah Loures.</p>
+            <h2>Studio de Gestão VIP</h2>
+            <p>Acesse o painel de criação e edição de mentorias da Profa. Déborah Loures.</p>
 
             <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
                 <div class="login-input-group">
-                    <label for="loginUser">Usuário ou E-mail:</label>
+                    <label for="loginUser">Login ou E-mail:</label>
                     <div class="login-input-wrap">
                         <i class="fa-solid fa-user"></i>
                         <input type="text" id="loginUser" required placeholder="mayconfg3569@gmail.com" value="mayconfg3569@gmail.com">
@@ -396,7 +511,7 @@
                 </div>
 
                 <button type="submit" class="btn-submit-primary" style="margin-top: 10px;" id="btnLoginSubmit">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar no Painel
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar no Studio VIP
                 </button>
             </form>
 
@@ -409,19 +524,19 @@
     </div>
 
     <!-- ==========================================================================
-         TELA 2: DASHBOARD ADMINISTRATIVO WORKSPACE
+         TELA 2: STUDIO ADMINISTRATIVO WORKSPACE
          ========================================================================== -->
     <div class="dashboard-wrapper" id="dashboardScreen">
         <div class="container">
 
-            <!-- HEADER DO DASHBOARD -->
+            <!-- HEADER PRINCIPAL DO STUDIO -->
             <div class="admin-header-bar">
                 <div class="admin-user-info">
                     <div class="admin-user-avatar">
                         <img src="assets/deborah_loures.jpg" alt="Déborah Loures">
                     </div>
                     <div>
-                        <h2 style="font-size: 17px; color: #FFF; font-weight: 800;">Painel de Gestão VIP</h2>
+                        <h2 style="font-size: 17px; color: #FFF; font-weight: 800;">Studio de Gestão VIP</h2>
                         <span style="font-size: 11.5px; color: var(--primary-light);">Profa. Déborah Loures • Administrador</span>
                     </div>
                 </div>
@@ -436,31 +551,13 @@
                 </div>
             </div>
 
-            <!-- ESTATÍSTICAS RÁPIDAS -->
-            <div class="admin-stats-overview">
-                <div class="stat-card-admin">
-                    <div class="label">Mentorias Ativas</div>
-                    <div class="val" id="statTotalMentorias">4</div>
-                </div>
-                <div class="stat-card-admin">
-                    <div class="label">Alunas / Leads Cadastrados</div>
-                    <div class="val" id="statTotalLeads" style="color: #86EFAC;">0</div>
-                </div>
-                <div class="stat-card-admin">
-                    <div class="label">Status do Supabase</div>
-                    <div class="val" style="font-size: 16px; color: #86EFAC; display: flex; align-items: center; gap: 6px; margin-top: 6px;">
-                        <i class="fa-solid fa-circle" style="font-size: 10px;"></i> Conectado em Nuvem
-                    </div>
-                </div>
-            </div>
-
-            <!-- ABAS DE NAVEGAÇÃO -->
+            <!-- ABAS PRINCIPAIS DE NAVEGAÇÃO -->
             <div class="admin-nav-tabs">
                 <button class="admin-nav-btn active" id="tabBtn-mentorias" onclick="switchDashboardTab('mentorias')">
                     <i class="fa-solid fa-graduation-cap"></i> Cursos & Mentorias
                 </button>
-                <button class="admin-nav-btn" id="tabBtn-novo" onclick="startNewMentoria()">
-                    <i class="fa-solid fa-plus"></i> + Nova Mentoria
+                <button class="admin-nav-btn" id="tabBtn-editor" onclick="startNewMentoriaStudio()">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> + Criar no Studio VIP
                 </button>
                 <button class="admin-nav-btn" id="tabBtn-leads" onclick="switchDashboardTab('leads')">
                     <i class="fa-solid fa-users"></i> Alunas Interessadas (Leads)
@@ -471,17 +568,17 @@
             </div>
 
             <!-- ==============================================================
-                 ABA 1: LISTAGEM DE CURSOS & MENTORIAS
+                 ABA 1: LISTAGEM DE CURSOS
                  ============================================================== -->
             <div class="admin-tab-pane" id="pane-mentorias">
-                <div class="admin-card-surface">
+                <div class="studio-card-surface">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                         <div>
-                            <h3 style="font-size: 18px; color: #FFF; font-weight: 800;">Catálogo de Mentorias</h3>
-                            <p style="font-size: 12.5px; color: var(--text-muted);">Edite valores, pause ou adicione novas formações ao site em tempo real.</p>
+                            <h3 style="font-size: 18px; color: #FFF; font-weight: 800;">Catálogo de Mentorias VIP</h3>
+                            <p style="font-size: 12.5px; color: var(--text-muted);">Visualize todos os cursos ou clique em "Abrir no Studio" para editar com Prévia em Tempo Real.</p>
                         </div>
-                        <button onclick="startNewMentoria()" class="btn-submit-primary" style="width: auto; padding: 8px 18px; font-size: 12px;">
-                            <i class="fa-solid fa-plus"></i> Criar Nova Mentoria
+                        <button onclick="startNewMentoriaStudio()" class="btn-submit-primary" style="width: auto; padding: 9px 20px; font-size: 12.5px;">
+                            <i class="fa-solid fa-plus"></i> Nova Mentoria no Studio
                         </button>
                     </div>
 
@@ -507,130 +604,281 @@
             </div>
 
             <!-- ==============================================================
-                 ABA 2: FORMULÁRIO DE CRIAÇÃO / EDIÇÃO DE MENTORIA
+                 ABA 2: STUDIO DE CRIAÇÃO & EDIÇÃO COM LIVE PREVIEW
                  ============================================================== -->
             <div class="admin-tab-pane" id="pane-editor" style="display: none;">
-                <div class="admin-card-surface">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 14px;">
-                        <div>
-                            <h3 style="font-size: 18px; color: #FFF; font-weight: 800;" id="editorFormTitle">Cadastrar Nova Mentoria</h3>
-                            <p style="font-size: 12.5px; color: var(--text-muted);">Preencha os detalhes, módulos práticos e bônus inclusos.</p>
+                
+                <div class="studio-container">
+                    
+                    <!-- LADO ESQUERDO: CONTROLES INTELIGENTES POR ETAPAS -->
+                    <div class="studio-card-surface">
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="font-size: 18px; color: #FFF; font-weight: 800;" id="studioHeaderTitle">
+                                <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Studio de Edição VIP
+                            </h3>
+                            <button onclick="switchDashboardTab('mentorias')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; padding: 6px 14px; border-radius: 20px; font-size: 11.5px; cursor: pointer;">
+                                <i class="fa-solid fa-xmark"></i> Fechar
+                            </button>
                         </div>
-                        <button onclick="switchDashboardTab('mentorias')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer;">
-                            <i class="fa-solid fa-arrow-left"></i> Cancelar
-                        </button>
+
+                        <!-- ETAPAS DO STUDIO -->
+                        <div class="studio-steps-nav">
+                            <button type="button" class="studio-step-btn active" id="stepBtn-1" onclick="goToStudioStep(1)">
+                                <i class="fa-solid fa-gem"></i> 1. Identidade
+                            </button>
+                            <button type="button" class="studio-step-btn" id="stepBtn-2" onclick="goToStudioStep(2)">
+                                <i class="fa-solid fa-clock"></i> 2. Formato
+                            </button>
+                            <button type="button" class="studio-step-btn" id="stepBtn-3" onclick="goToStudioStep(3)">
+                                <i class="fa-solid fa-calculator"></i> 3. Preços & ROI
+                            </button>
+                            <button type="button" class="studio-step-btn" id="stepBtn-4" onclick="goToStudioStep(4)">
+                                <i class="fa-solid fa-book-open"></i> 4. Grade & Bônus
+                            </button>
+                        </div>
+
+                        <form id="studioFullForm" onsubmit="handleSaveStudioMentoria(event)">
+                            <input type="hidden" id="studioMentoriaId">
+                            <input type="hidden" id="studioIconeVal" value="fa-gem">
+                            <input type="hidden" id="studioCategoriaVal" value="Formação Base">
+
+                            <!-- ETAPA 1: IDENTIDADE DO CURSO -->
+                            <div class="studio-step-section active" id="studioStep-1">
+                                <div class="admin-form-group">
+                                    <label><i class="fa-solid fa-heading"></i> Nome da Mentoria / Curso:</label>
+                                    <input type="text" id="studioTitulo" required placeholder="Ex: Mentoria SkinStart™: Limpeza & Fisiologia de Alta Precisão" oninput="updateLivePreview()">
+                                </div>
+
+                                <div class="admin-form-group">
+                                    <label><i class="fa-solid fa-layer-group"></i> Categoria do Curso:</label>
+                                    <div class="category-chip-grid" id="categoryChips">
+                                        <button type="button" class="category-chip selected" onclick="selectCategoryChip('Formação Base')">✨ Formação Base</button>
+                                        <button type="button" class="category-chip" onclick="selectCategoryChip('Cosmetologia')">🧪 Cosmetologia</button>
+                                        <button type="button" class="category-chip" onclick="selectCategoryChip('Melasma')">🎯 Tratamento de Melasma</button>
+                                        <button type="button" class="category-chip" onclick="selectCategoryChip('Indução de Colágeno')">🔬 Procedimento 5 em 1</button>
+                                        <button type="button" class="category-chip" onclick="selectCategoryChip('Outra')">➕ Personalizada</button>
+                                    </div>
+                                    <input type="text" id="studioCustomCategory" placeholder="Ou digite outra categoria..." style="display: none;" oninput="updateLivePreview()">
+                                </div>
+
+                                <div class="admin-form-group">
+                                    <label><i class="fa-solid fa-icons"></i> Escolha o Ícone do Card:</label>
+                                    <div class="icon-selector-grid" id="iconPickerGrid">
+                                        <button type="button" class="icon-opt-btn selected" onclick="selectStudioIcon('fa-gem')"><i class="fa-solid fa-gem"></i></button>
+                                        <button type="button" class="icon-opt-btn" onclick="selectStudioIcon('fa-seedling')"><i class="fa-solid fa-seedling"></i></button>
+                                        <button type="button" class="icon-opt-btn" onclick="selectStudioIcon('fa-microscope')"><i class="fa-solid fa-microscope"></i></button>
+                                        <button type="button" class="icon-opt-btn" onclick="selectStudioIcon('fa-dna')"><i class="fa-solid fa-dna"></i></button>
+                                        <button type="button" class="icon-opt-btn" onclick="selectStudioIcon('fa-wand-magic-sparkles')"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                                        <button type="button" class="icon-opt-btn" onclick="selectStudioIcon('fa-award')"><i class="fa-solid fa-award"></i></button>
+                                        <button type="button" class="icon-opt-btn" onclick="selectStudioIcon('fa-spa')"><i class="fa-solid fa-spa"></i></button>
+                                        <button type="button" class="icon-opt-btn" onclick="selectStudioIcon('fa-droplet')"><i class="fa-solid fa-droplet"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="admin-form-group">
+                                    <label><i class="fa-solid fa-quote-left"></i> Subtítulo / Promessa Principal:</label>
+                                    <textarea id="studioSubtitulo" rows="2" placeholder="Resumo em 1 frase do maior diferencial do curso..." oninput="updateLivePreview()"></textarea>
+                                </div>
+
+                                <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                                    <button type="button" class="btn-submit-primary" style="width: auto; padding: 10px 22px;" onclick="goToStudioStep(2)">
+                                        Próximo: Formato & Duração <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ETAPA 2: FORMATO & DURAÇÃO -->
+                            <div class="studio-step-section" id="studioStep-2">
+                                <label style="display: block; font-size: 13px; font-weight: 700; color: #FFF; margin-bottom: 8px;">
+                                    <i class="fa-solid fa-clock"></i> Formato de Duração:
+                                </label>
+                                
+                                <div class="duration-card-grid">
+                                    <div class="duration-pick-card selected" id="durCard-1" onclick="selectDurationPreset(1, 8)">
+                                        <strong>1 Dia Intensivo (8 horas)</strong>
+                                        <span>Prática individual direta na modelo</span>
+                                    </div>
+                                    <div class="duration-pick-card" id="durCard-2" onclick="selectDurationPreset(2, 16)">
+                                        <strong>2 Dias VIP Master (16 horas)</strong>
+                                        <span>Imersão teórica profunda + prática total</span>
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+                                    <div class="admin-form-group">
+                                        <label>Dias:</label>
+                                        <input type="number" id="studioDuracaoDias" value="1" min="1" oninput="updateLivePreview()">
+                                    </div>
+                                    <div class="admin-form-group">
+                                        <label>Carga Horária (Horas):</label>
+                                        <input type="number" id="studioDuracaoHoras" value="8" min="1" oninput="updateLivePreview()">
+                                    </div>
+                                </div>
+
+                                <div class="admin-form-group">
+                                    <label><i class="fa-solid fa-bullseye"></i> Para quem é indicado (Público-Alvo):</label>
+                                    <textarea id="studioPublicoAlvo" rows="3" placeholder="Ex: Iniciantes do absoluto zero ou profissionais que desejam dominar..." oninput="updateLivePreview()"></textarea>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                    <button type="button" class="btn-nav-admin" onclick="goToStudioStep(1)">
+                                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                                    </button>
+                                    <button type="button" class="btn-submit-primary" style="width: auto; padding: 10px 22px;" onclick="goToStudioStep(3)">
+                                        Próximo: Preços & ROI <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ETAPA 3: PREÇOS & ROI INTELIGENTE -->
+                            <div class="studio-step-section" id="studioStep-3">
+                                
+                                <div class="calc-pricing-box">
+                                    <div class="admin-form-group" style="margin-bottom: 12px;">
+                                        <label style="color: #86EFAC; font-size: 13.5px;"><i class="fa-solid fa-bolt"></i> Preço com Desconto no PIX à vista (R$):</label>
+                                        <input type="number" step="0.01" id="studioPrecoPix" value="1500.00" style="font-size: 18px; font-weight: 800; color: #86EFAC;" oninput="autoCalculateInstallments()">
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div class="admin-form-group">
+                                            <label>Parcelas no Cartão:</label>
+                                            <select id="studioParcelasQtd" onchange="autoCalculateInstallments()">
+                                                <option value="6">6x</option>
+                                                <option value="10" selected>10x</option>
+                                                <option value="12">12x</option>
+                                            </select>
+                                        </div>
+                                        <div class="admin-form-group">
+                                            <label>Valor de Cada Parcela (R$):</label>
+                                            <input type="number" step="0.01" id="studioParcelasValor" value="165.00" oninput="updateLivePreview()">
+                                        </div>
+                                    </div>
+
+                                    <div class="admin-form-group" style="margin-bottom: 0;">
+                                        <label>Valor Total Parcelado (R$):</label>
+                                        <input type="number" step="0.01" id="studioPrecoCartao" value="1650.00" oninput="updateLivePreview()">
+                                    </div>
+                                </div>
+
+                                <div class="admin-form-group">
+                                    <label><i class="fa-solid fa-chart-line"></i> Cálculo do Retorno Rápido (ROI):</label>
+                                    <textarea id="studioRoiDescricao" rows="2" placeholder="Ex: Cobrando R$ 180 por sessão, com 10 atendimentos você recupera 100%..." oninput="updateLivePreview()"></textarea>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                    <button type="button" class="btn-nav-admin" onclick="goToStudioStep(2)">
+                                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                                    </button>
+                                    <button type="button" class="btn-submit-primary" style="width: auto; padding: 10px 22px;" onclick="goToStudioStep(4)">
+                                        Próximo: Grade & Bônus <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ETAPA 4: GRADE PRÁTICA & BÔNUS -->
+                            <div class="studio-step-section" id="studioStep-4">
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <label style="font-size: 13.5px; font-weight: 800; color: #FFF;"><i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Grade de Aulas Práticas:</label>
+                                </div>
+
+                                <div id="studioModulosContainer">
+                                    <!-- Blocos de Módulos Dinâmicos -->
+                                </div>
+
+                                <button type="button" class="btn-add-dynamic" onclick="addStudioModulo()">
+                                    <i class="fa-solid fa-plus"></i> + Adicionar Nova Aula / Tópico
+                                </button>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 12px;">
+                                    <label style="font-size: 13.5px; font-weight: 800; color: #FFF;"><i class="fa-solid fa-gift" style="color: var(--primary);"></i> Bônus Exclusivos Inclusos:</label>
+                                </div>
+
+                                <div id="studioBonusContainer">
+                                    <!-- Blocos de Bônus Dinâmicos -->
+                                </div>
+
+                                <button type="button" class="btn-add-dynamic" onclick="addStudioBonus()">
+                                    <i class="fa-solid fa-plus"></i> + Adicionar Novo Bônus VIP
+                                </button>
+
+                                <div style="display: flex; gap: 12px; margin-top: 28px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                                    <button type="button" class="btn-nav-admin" onclick="goToStudioStep(3)">
+                                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                                    </button>
+                                    <button type="submit" class="btn-submit-primary" style="flex: 1;" id="btnStudioSave">
+                                        <i class="fa-solid fa-floppy-disk"></i> Salvar e Publicar no Site
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
                     </div>
 
-                    <form id="mentoriaFullForm" onsubmit="handleSaveMentoriaFull(event)">
-                        <input type="hidden" id="formMentoriaId">
-
-                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
-                            <div class="admin-form-group">
-                                <label>Título da Mentoria:</label>
-                                <input type="text" id="formTitulo" required placeholder="Ex: Mentoria SkinStart™: Limpeza & Fisiologia">
-                            </div>
-                            <div class="admin-form-group">
-                                <label>Slug (Identificador URL único):</label>
-                                <input type="text" id="formSlug" required placeholder="ex: skinstart">
+                    <!-- LADO DIREITO: LIVE PREVIEW DO CARD EM TEMPO REAL -->
+                    <div class="live-preview-panel">
+                        <div class="live-preview-header">
+                            <div>
+                                <span class="live-preview-badge"><i class="fa-solid fa-circle"></i> Prévia em Tempo Real</span>
+                                <h4 style="font-size: 13.5px; color: #FFF; font-weight: 800; margin-top: 4px;">Como a Aluna verá no Site:</h4>
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px;">
-                            <div class="admin-form-group">
-                                <label>Categoria:</label>
-                                <input type="text" id="formCategoria" required placeholder="Ex: Formação Base">
+                        <!-- CARD RENDERIZADO AO VIVO -->
+                        <div class="preview-card-container">
+                            <div class="card-top-row">
+                                <span class="card-badge" id="prevBadge" style="background: rgba(184, 151, 108, 0.15); color: var(--primary-dark);">
+                                    <i class="fa-solid fa-gem" id="prevIcon"></i> <span id="prevCategory">Formação Base</span>
+                                </span>
+                                <span class="card-duration" id="prevDuration">
+                                    <i class="fa-regular fa-clock"></i> 1 Dia (8h)
+                                </span>
                             </div>
-                            <div class="admin-form-group">
-                                <label>Ícone FontAwesome:</label>
-                                <input type="text" id="formIcone" value="fa-gem" placeholder="Ex: fa-seedling">
+
+                            <h3 class="card-title" id="prevTitle" style="margin-top: 10px; font-size: 17px; font-weight: 800; color: var(--text-dark);">Título da Mentoria</h3>
+                            <p class="card-subtitle" id="prevSubtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Subtítulo do curso e diferencial exclusivo.</p>
+
+                            <div class="card-highlights-box" style="background: var(--bg-sand); border-left: 3px solid var(--primary); padding: 10px 12px; border-radius: 6px; margin: 14px 0; font-size: 12px;">
+                                <strong>🎯 Para quem é:</strong> <span id="prevPublico">Iniciantes ou profissionais que buscam excelência.</span>
                             </div>
-                            <div class="admin-form-group">
-                                <label>Duração (Dias):</label>
-                                <input type="number" id="formDuracaoDias" value="1" min="1" required>
+
+                            <div style="display: flex; gap: 10px; margin-bottom: 14px; font-size: 11.5px; color: var(--text-muted);">
+                                <span><i class="fa-solid fa-list-check" style="color: var(--primary);"></i> <span id="prevModCount">2</span> Aulas Práticas</span>
+                                <span><i class="fa-solid fa-gift" style="color: var(--primary);"></i> <span id="prevBonusCount">1</span> Bônus VIP</span>
                             </div>
-                            <div class="admin-form-group">
-                                <label>Carga Horária (Horas):</label>
-                                <input type="number" id="formDuracaoHoras" value="8" min="1" required>
+
+                            <div class="card-pricing-box" style="background: var(--bg-dark); color: #FFF; padding: 12px 14px; border-radius: 10px; margin-bottom: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 20px; font-weight: 800; color: #FFF;" id="prevPricePix">R$ 1.500,00</span>
+                                    <span style="background: #22C55E; color: #12100E; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 20px;">PIX à vista</span>
+                                </div>
+                                <div style="font-size: 11.5px; color: #D6CCC2; margin-top: 4px;" id="prevPriceInstallments">
+                                    ou 10x de <strong style="color: var(--primary-light);">R$ 165,00</strong> no cartão
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button type="button" style="background: var(--bg-sand); border: 1px solid var(--border-soft); color: var(--text-dark); padding: 9px; border-radius: 8px; font-size: 11.5px; font-weight: 700;">
+                                    <i class="fa-solid fa-eye"></i> Ver Ementa
+                                </button>
+                                <button type="button" style="background: #22C55E; color: #12100E; border: none; padding: 9px; border-radius: 8px; font-size: 11.5px; font-weight: 800;">
+                                    <i class="fa-brands fa-whatsapp"></i> Garantir Vaga
+                                </button>
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px;">
-                            <div class="admin-form-group">
-                                <label>Preço à vista no PIX (R$):</label>
-                                <input type="number" step="0.01" id="formPrecoPix" required placeholder="1500.00">
-                            </div>
-                            <div class="admin-form-group">
-                                <label>Preço Total no Cartão (R$):</label>
-                                <input type="number" step="0.01" id="formPrecoCartao" required placeholder="1650.00">
-                            </div>
-                            <div class="admin-form-group">
-                                <label>Nº de Parcelas:</label>
-                                <input type="number" id="formParcelasQtd" value="10" required>
-                            </div>
-                            <div class="admin-form-group">
-                                <label>Valor de Cada Parcela (R$):</label>
-                                <input type="number" step="0.01" id="formParcelasValor" required placeholder="165.00">
-                            </div>
-                        </div>
+                    </div>
 
-                        <div class="admin-form-group">
-                            <label>Subtítulo / Descrição Rápida:</label>
-                            <textarea id="formSubtitulo" rows="2" placeholder="Resumo dos diferenciais da mentoria..."></textarea>
-                        </div>
-
-                        <div class="admin-form-group">
-                            <label>Público-Alvo (Para quem é indicado):</label>
-                            <textarea id="formPublicoAlvo" rows="2" placeholder="Iniciantes do absoluto zero ou profissionais que..."></textarea>
-                        </div>
-
-                        <div class="admin-form-group">
-                            <label>Cálculo de Retorno Financeiro (ROI):</label>
-                            <textarea id="formRoiDescricao" rows="2" placeholder="Cobrando R$ 150 por atendimento, com 10 clientes você recupera 100%..."></textarea>
-                        </div>
-
-                        <!-- GERENCIADOR DE MÓDULOS DA GRADE -->
-                        <div style="margin-top: 28px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <h4 style="font-size: 15px; color: #FFF; font-weight: 800;"><i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Grade Curricular & Módulos Práticos</h4>
-                            </div>
-                            <div id="dynamicModulosList">
-                                <!-- Módulos dinâmicos -->
-                            </div>
-                            <button type="button" class="btn-add-dynamic" onclick="addModuloField()">
-                                <i class="fa-solid fa-plus"></i> Adicionar Tópico na Grade
-                            </button>
-                        </div>
-
-                        <!-- GERENCIADOR DE BÔNUS -->
-                        <div style="margin-top: 10px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <h4 style="font-size: 15px; color: #FFF; font-weight: 800;"><i class="fa-solid fa-gift" style="color: var(--primary);"></i> Bônus Exclusivos Inclusos</h4>
-                            </div>
-                            <div id="dynamicBonusList">
-                                <!-- Bônus dinâmicos -->
-                            </div>
-                            <button type="button" class="btn-add-dynamic" onclick="addBonusField()">
-                                <i class="fa-solid fa-plus"></i> Adicionar Bônus VIP
-                            </button>
-                        </div>
-
-                        <div style="display: flex; gap: 12px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                            <button type="button" onclick="switchDashboardTab('mentorias')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; padding: 12px 24px; border-radius: 30px; font-weight: 700; cursor: pointer;">
-                                Cancelar
-                            </button>
-                            <button type="submit" class="btn-submit-primary" style="flex: 1;" id="btnSubmitMentoria">
-                                <i class="fa-solid fa-floppy-disk"></i> Salvar Mentoria no Supabase
-                            </button>
-                        </div>
-                    </form>
                 </div>
+
             </div>
 
             <!-- ==============================================================
                  ABA 3: LEADS & ALUNAS INTERESSADAS (CRM)
                  ============================================================== -->
             <div class="admin-tab-pane" id="pane-leads" style="display: none;">
-                <div class="admin-card-surface">
+                <div class="studio-card-surface">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                         <div>
                             <h3 style="font-size: 18px; color: #FFF; font-weight: 800;">Alunas Interessadas (Contatos Recebidos)</h3>
@@ -665,7 +913,7 @@
                  ABA 4: CONFIGURAÇÕES GERAIS DA MENTORA
                  ============================================================== -->
             <div class="admin-tab-pane" id="pane-config" style="display: none;">
-                <div class="admin-card-surface" style="max-width: 680px;">
+                <div class="studio-card-surface" style="max-width: 680px;">
                     <h3 style="font-size: 18px; color: #FFF; font-weight: 800; margin-bottom: 6px;">Configurações Gerais da Mentora</h3>
                     <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px;">Edite as informações exibidas no cabeçalho e rodapé do site.</p>
 
@@ -702,4 +950,5 @@
     <script src="js/admin-dashboard.js"></script>
 </body>
 </html>
+
 

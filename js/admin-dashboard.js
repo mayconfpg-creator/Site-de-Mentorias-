@@ -1,10 +1,11 @@
 /* ==========================================================================
    PLATAFORMA PREMIUM DE MENTORIAS VIP — DÉBORAH LOURES
-   PAINEL ADMINISTRATIVO & CMS (ADMIN-DASHBOARD.JS)
+   STUDIO ADMINISTRATIVO VIP & LIVE PREVIEW CMS (ADMIN-DASHBOARD.JS)
    ========================================================================== */
 
 let adminMentorias = [];
 let adminLeads = [];
+let currentStudioStep = 1;
 
 // Lista de credenciais válidas para o Administrador
 const VALID_CREDENTIALS = [
@@ -12,8 +13,6 @@ const VALID_CREDENTIALS = [
     { email: 'admin', pass: '3569Proview@#' },
     { email: 'admin', pass: '1876' }
 ];
-
-const VALID_PASSWORDS = ['3569Proview@#', '1876'];
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
@@ -53,7 +52,7 @@ function handleAdminLogin(e) {
     if (isMatch) {
         sessionStorage.setItem('vip_admin_auth', 'true');
         sessionStorage.setItem('vip_admin_user', user || 'mayconfg3569@gmail.com');
-        showToast('Login realizado com sucesso!');
+        showToast('Bem-vindo ao Studio VIP!');
         showDashboard();
     } else {
         alert('❌ Usuário ou senha incorretos! Verifique os dados digitados.');
@@ -62,7 +61,7 @@ function handleAdminLogin(e) {
 
 // Manipulador de Logout
 function handleAdminLogout() {
-    if (confirm('Deseja realmente sair do painel administrativo?')) {
+    if (confirm('Deseja realmente sair do Studio?')) {
         sessionStorage.removeItem('vip_admin_auth');
         sessionStorage.removeItem('vip_admin_user');
         showToast('Você saiu do painel.');
@@ -70,7 +69,7 @@ function handleAdminLogout() {
     }
 }
 
-// Alternador de Abas do Dashboard
+// Alternador de Abas Principais
 function switchDashboardTab(tabName) {
     document.querySelectorAll('.admin-tab-pane').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -91,10 +90,6 @@ async function loadDashboardData() {
         adminMentorias = await window.MentoriaDB.getAllMentoriasAdmin();
         adminLeads = await window.MentoriaDB.getLeads();
 
-        // Atualiza Estatísticas
-        document.getElementById('statTotalMentorias').innerText = adminMentorias.filter(m => m.ativo).length;
-        document.getElementById('statTotalLeads').innerText = adminLeads.length;
-
         renderDashboardMentorias();
         renderDashboardLeads();
     } catch (e) {
@@ -103,7 +98,7 @@ async function loadDashboardData() {
 }
 
 // ==========================================================================
-// SEÇÃO DE MENTORIAS (CRUD)
+// SEÇÃO DE MENTORIAS (LISTAGEM & QUICK ACTIONS)
 // ==========================================================================
 
 function renderDashboardMentorias() {
@@ -122,7 +117,7 @@ function renderDashboardMentorias() {
         return `
             <tr>
                 <td>
-                    <strong style="color: #FFF; font-size: 13.5px;">${m.titulo}</strong>
+                    <strong style="color: #FFF; font-size: 13.5px;"><i class="fa-solid ${m.icone || 'fa-gem'}" style="color: var(--primary); margin-right: 6px;"></i> ${m.titulo}</strong>
                     <div style="font-size: 11px; color: var(--text-muted);">${m.slug}</div>
                 </td>
                 <td><span style="background: rgba(184, 151, 108, 0.15); color: var(--primary-light); padding: 3px 8px; border-radius: 4px; font-size: 11px;">${m.categoria}</span></td>
@@ -135,13 +130,13 @@ function renderDashboardMentorias() {
                     </span>
                 </td>
                 <td>
-                    <button onclick="editMentoria('${m.id}')" title="Editar" style="background: rgba(184, 151, 108, 0.2); border: 1px solid var(--primary); color: #FFF; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 4px;">
-                        <i class="fa-solid fa-pen-to-square"></i> Editar
+                    <button onclick="editMentoriaInStudio('${m.id}')" title="Abrir no Studio VIP" style="background: linear-gradient(135deg, #DFC8A8, #B8976C); color: #12100E; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11.5px; font-weight: 800; margin-right: 4px;">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Editar no Studio
                     </button>
-                    <button onclick="toggleMentoria('${m.id}', ${!m.ativo})" title="${m.ativo ? 'Pausar' : 'Ativar'}" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255,255,255,0.15); color: ${m.ativo ? '#FBBF24' : '#86EFAC'}; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 4px;">
+                    <button onclick="toggleMentoria('${m.id}', ${!m.ativo})" title="${m.ativo ? 'Pausar' : 'Ativar'}" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255,255,255,0.15); color: ${m.ativo ? '#FBBF24' : '#86EFAC'}; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11.5px; margin-right: 4px;">
                         <i class="fa-solid ${m.ativo ? 'fa-pause' : 'fa-play'}"></i>
                     </button>
-                    <button onclick="deleteMentoriaConfirm('${m.id}', '${m.titulo}')" title="Excluir" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.3); color: #F87171; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                    <button onclick="deleteMentoriaConfirm('${m.id}', '${m.titulo}')" title="Excluir" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.3); color: #F87171; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11.5px;">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </td>
@@ -150,173 +145,296 @@ function renderDashboardMentorias() {
     }).join('');
 }
 
-// Iniciar Criação de Nova Mentoria
-function startNewMentoria() {
-    document.getElementById('editorFormTitle').innerText = 'Cadastrar Nova Mentoria VIP';
-    document.getElementById('formMentoriaId').value = '';
-    document.getElementById('mentoriaFullForm').reset();
-    
-    // Limpa campos dinâmicos
-    document.getElementById('dynamicModulosList').innerHTML = '';
-    document.getElementById('dynamicBonusList').innerHTML = '';
+// ==========================================================================
+// STUDIO VIP — CONTROLES & WIZARD INTELIGENTE
+// ==========================================================================
 
-    // Adiciona 2 campos padrão para facilitar
-    addModuloField('Módulo 1: Fundamentos e Avaliação Clínica', 'Abordagem diagnóstica e seleção de dermocosméticos.');
-    addModuloField('Módulo 2: Prática Hands-On Individual', 'Execução prática completa no modelo com supervisão direta.');
-    addBonusField('Apostila Clínica & Protocolos Prontos', 'Manual técnico passo a passo para consulta.');
+function goToStudioStep(step) {
+    currentStudioStep = step;
+    document.querySelectorAll('.studio-step-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.studio-step-btn').forEach(btn => btn.classList.remove('active'));
 
-    switchDashboardTab('editor');
+    const section = document.getElementById(`studioStep-${step}`);
+    if (section) section.classList.add('active');
+
+    const btn = document.getElementById(`stepBtn-${step}`);
+    if (btn) btn.classList.add('active');
 }
 
-// Editar Mentoria Existente
-function editMentoria(id) {
+// Seleção de Chip de Categoria
+function selectCategoryChip(cat) {
+    const hiddenCat = document.getElementById('studioCategoriaVal');
+    const customInput = document.getElementById('studioCustomCategory');
+    
+    document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
+    
+    if (cat === 'Outra') {
+        customInput.style.display = 'block';
+        customInput.focus();
+        hiddenCat.value = customInput.value || 'Personalizada';
+    } else {
+        customInput.style.display = 'none';
+        hiddenCat.value = cat;
+    }
+
+    event.target.classList.add('selected');
+    updateLivePreview();
+}
+
+// Seleção de Ícone
+function selectStudioIcon(iconName) {
+    document.getElementById('studioIconeVal').value = iconName;
+    document.querySelectorAll('.icon-opt-btn').forEach(b => b.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+    updateLivePreview();
+}
+
+// Seleção de Duração
+function selectDurationPreset(dias, horas) {
+    document.getElementById('studioDuracaoDias').value = dias;
+    document.getElementById('studioDuracaoHoras').value = horas;
+
+    document.querySelectorAll('.duration-pick-card').forEach(c => c.classList.remove('selected'));
+    if (dias === 1) document.getElementById('durCard-1').classList.add('selected');
+    if (dias === 2) document.getElementById('durCard-2').classList.add('selected');
+
+    updateLivePreview();
+}
+
+// Cálculo Automático de Parcelas
+function autoCalculateInstallments() {
+    const pixVal = parseFloat(document.getElementById('studioPrecoPix').value) || 0;
+    const parcelasQtd = parseInt(document.getElementById('studioParcelasQtd').value) || 10;
+    
+    // Acréscimo padrão de 10% para cartão
+    const totalCartao = pixVal * 1.10;
+    const valorParcela = totalCartao / parcelasQtd;
+
+    document.getElementById('studioPrecoCartao').value = totalCartao.toFixed(2);
+    document.getElementById('studioParcelasValor').value = valorParcela.toFixed(2);
+
+    updateLivePreview();
+}
+
+// Atualização da Prévia em Tempo Real (Live Preview Reactivity)
+function updateLivePreview() {
+    const titulo = document.getElementById('studioTitulo').value.trim() || 'Nome da Mentoria';
+    const subtitulo = document.getElementById('studioSubtitulo').value.trim() || 'Subtítulo do curso e diferencial exclusivo.';
+    const publico = document.getElementById('studioPublicoAlvo').value.trim() || 'Iniciantes ou profissionais que buscam excelência.';
+    const categoria = document.getElementById('studioCustomCategory').style.display !== 'none' && document.getElementById('studioCustomCategory').value.trim()
+        ? document.getElementById('studioCustomCategory').value.trim()
+        : (document.getElementById('studioCategoriaVal').value || 'Formação Base');
+    const icone = document.getElementById('studioIconeVal').value || 'fa-gem';
+    
+    const dias = document.getElementById('studioDuracaoDias').value || 1;
+    const horas = document.getElementById('studioDuracaoHoras').value || 8;
+
+    const precoPix = parseFloat(document.getElementById('studioPrecoPix').value) || 0;
+    const parcelasQtd = document.getElementById('studioParcelasQtd').value || 10;
+    const parcelasValor = parseFloat(document.getElementById('studioParcelasValor').value) || 0;
+
+    const modulosQtd = document.querySelectorAll('.module-item-studio').length;
+    const bonusQtd = document.querySelectorAll('.bonus-item-studio').length;
+
+    // Atualiza elementos do Card Preview
+    document.getElementById('prevTitle').innerText = titulo;
+    document.getElementById('prevSubtitle').innerText = subtitulo;
+    document.getElementById('prevPublico').innerText = publico.length > 80 ? publico.substring(0, 80) + '...' : publico;
+    document.getElementById('prevCategory').innerText = categoria;
+    document.getElementById('prevIcon').className = `fa-solid ${icone}`;
+    document.getElementById('prevDuration').innerHTML = `<i class="fa-regular fa-clock"></i> ${dias} ${dias == 1 ? 'Dia' : 'Dias'} (${horas}h)`;
+    
+    document.getElementById('prevPricePix').innerText = precoPix.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('prevPriceInstallments').innerHTML = `ou ${parcelasQtd}x de <strong style="color: var(--primary-light);">${parcelasValor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong> no cartão`;
+
+    document.getElementById('prevModCount').innerText = modulosQtd;
+    document.getElementById('prevBonusCount').innerText = bonusQtd;
+}
+
+// Iniciar Criação de Nova Mentoria no Studio
+function startNewMentoriaStudio() {
+    document.getElementById('studioHeaderTitle').innerHTML = '<i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Criar Nova Mentoria no Studio';
+    document.getElementById('studioMentoriaId').value = '';
+    document.getElementById('studioFullForm').reset();
+    
+    document.getElementById('studioModulosContainer').innerHTML = '';
+    document.getElementById('studioBonusContainer').innerHTML = '';
+
+    // Módulos iniciais de exemplo
+    addStudioModulo('Módulo 1: Fundamentos e Avaliação Clínica', 'Abordagem diagnóstica e seleção de dermocosméticos.');
+    addStudioModulo('Módulo 2: Prática Hands-On Individual', 'Execução prática completa no modelo com supervisão direta.');
+    addStudioBonus('Apostila Clínica & Protocolos Prontos', 'Manual técnico passo a passo para consulta.');
+
+    goToStudioStep(1);
+    switchDashboardTab('editor');
+    updateLivePreview();
+}
+
+// Editar Mentoria no Studio
+function editMentoriaInStudio(id) {
     const m = adminMentorias.find(item => item.id === id);
     if (!m) return;
 
-    document.getElementById('editorFormTitle').innerText = `Editando: ${m.titulo}`;
-    document.getElementById('formMentoriaId').value = m.id;
-    document.getElementById('formTitulo').value = m.titulo;
-    document.getElementById('formSlug').value = m.slug;
-    document.getElementById('formCategoria').value = m.categoria;
-    document.getElementById('formIcone').value = m.icone || 'fa-gem';
-    document.getElementById('formDuracaoDias').value = m.duracao_dias;
-    document.getElementById('formDuracaoHoras').value = m.duracao_horas;
-    document.getElementById('formPrecoPix').value = m.preco_pix;
-    document.getElementById('formPrecoCartao').value = m.preco_cartao;
-    document.getElementById('formParcelasQtd').value = m.parcelas_qtd;
-    document.getElementById('formParcelasValor').value = m.parcelas_valor;
-    document.getElementById('formSubtitulo').value = m.subtitulo || '';
-    document.getElementById('formPublicoAlvo').value = m.publico_alvo || '';
-    document.getElementById('formRoiDescricao').value = m.roi_descricao || '';
+    document.getElementById('studioHeaderTitle').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color: var(--primary);"></i> Editando: ${m.titulo}`;
+    document.getElementById('studioMentoriaId').value = m.id;
+    document.getElementById('studioTitulo').value = m.titulo;
+    document.getElementById('studioCategoriaVal').value = m.categoria;
+    document.getElementById('studioIconeVal').value = m.icone || 'fa-gem';
+    document.getElementById('studioDuracaoDias').value = m.duracao_dias;
+    document.getElementById('studioDuracaoHoras').value = m.duracao_horas;
+    document.getElementById('studioPrecoPix').value = m.preco_pix;
+    document.getElementById('studioPrecoCartao').value = m.preco_cartao;
+    document.getElementById('studioParcelasQtd').value = m.parcelas_qtd;
+    document.getElementById('studioParcelasValor').value = m.parcelas_valor;
+    document.getElementById('studioSubtitulo').value = m.subtitulo || '';
+    document.getElementById('studioPublicoAlvo').value = m.publico_alvo || '';
+    document.getElementById('studioRoiDescricao').value = m.roi_descricao || '';
 
-    // Popula Módulos
-    const modulosListEl = document.getElementById('dynamicModulosList');
-    modulosListEl.innerHTML = '';
+    // Módulos
+    const modContainer = document.getElementById('studioModulosContainer');
+    modContainer.innerHTML = '';
     if (m.mentoria_modulos && m.mentoria_modulos.length > 0) {
-        m.mentoria_modulos.forEach(mod => addModuloField(mod.titulo, mod.descricao));
+        m.mentoria_modulos.forEach(mod => addStudioModulo(mod.titulo, mod.descricao));
     } else {
-        addModuloField('Módulo Prático', 'Descrição do procedimento.');
+        addStudioModulo('Módulo 1: Prática Clínica', 'Execução prática no paciente modelo.');
     }
 
-    // Popula Bônus
-    const bonusListEl = document.getElementById('dynamicBonusList');
-    bonusListEl.innerHTML = '';
+    // Bônus
+    const bonusContainer = document.getElementById('studioBonusContainer');
+    bonusContainer.innerHTML = '';
     if (m.mentoria_bonus && m.mentoria_bonus.length > 0) {
-        m.mentoria_bonus.forEach(b => addBonusField(b.titulo, b.descricao));
+        m.mentoria_bonus.forEach(b => addStudioBonus(b.titulo, b.descricao));
     }
 
+    goToStudioStep(1);
     switchDashboardTab('editor');
+    updateLivePreview();
 }
 
-// Adicionar Campo Dinâmico de Módulo
-function addModuloField(titulo = '', descricao = '') {
-    const container = document.getElementById('dynamicModulosList');
+// Adicionar Módulo no Studio
+function addStudioModulo(titulo = '', desc = '') {
+    const container = document.getElementById('studioModulosContainer');
+    const index = container.children.length + 1;
     const div = document.createElement('div');
-    div.className = 'dynamic-item-card modulo-item';
+    div.className = 'module-item-studio';
     div.innerHTML = `
-        <input type="text" class="mod-titulo" placeholder="Título do Módulo/Aula" value="${titulo}" required>
-        <input type="text" class="mod-desc" placeholder="Resumo do que é ensinado" value="${descricao}" required>
-        <button type="button" class="btn-remove-item" onclick="this.parentElement.remove()" title="Remover"><i class="fa-solid fa-trash"></i></button>
+        <div class="module-item-studio-header">
+            <span class="module-item-studio-num">Módulo ${index}</span>
+            <button type="button" class="btn-remove-item" onclick="this.closest('.module-item-studio').remove(); updateLivePreview();" title="Remover"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        <input type="text" class="mod-titulo" placeholder="Título da Aula / Tópico Prático" value="${titulo}" style="margin-bottom: 8px; font-weight: 700;" oninput="updateLivePreview()" required>
+        <textarea class="mod-desc" rows="2" placeholder="O que o aluno aprende neste módulo..." oninput="updateLivePreview()">${desc}</textarea>
     `;
     container.appendChild(div);
+    updateLivePreview();
 }
 
-// Adicionar Campo Dinâmico de Bônus
-function addBonusField(titulo = '', descricao = '') {
-    const container = document.getElementById('dynamicBonusList');
+// Adicionar Bônus no Studio
+function addStudioBonus(titulo = '', desc = '') {
+    const container = document.getElementById('studioBonusContainer');
     const div = document.createElement('div');
-    div.className = 'dynamic-item-card bonus-item';
+    div.className = 'module-item-studio bonus-item-studio';
+    div.style.borderLeftColor = 'var(--accent-gold)';
     div.innerHTML = `
-        <input type="text" class="bonus-titulo" placeholder="Nome do Bônus VIP" value="${titulo}" required>
-        <input type="text" class="bonus-desc" placeholder="Detalhes do bônus" value="${descricao}" required>
-        <button type="button" class="btn-remove-item" onclick="this.parentElement.remove()" title="Remover"><i class="fa-solid fa-trash"></i></button>
+        <div class="module-item-studio-header">
+            <span class="module-item-studio-num" style="color: var(--accent-gold);"><i class="fa-solid fa-gift"></i> Bônus VIP</span>
+            <button type="button" class="btn-remove-item" onclick="this.closest('.module-item-studio').remove(); updateLivePreview();" title="Remover"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        <input type="text" class="bonus-titulo" placeholder="Nome do Bônus VIP" value="${titulo}" style="margin-bottom: 8px; font-weight: 700;" oninput="updateLivePreview()" required>
+        <textarea class="bonus-desc" rows="2" placeholder="Detalhes do bônus..." oninput="updateLivePreview()">${desc}</textarea>
     `;
     container.appendChild(div);
+    updateLivePreview();
 }
 
-// Salvar Mentoria Completa no Supabase
-async function handleSaveMentoriaFull(e) {
+// Salvar Mentoria no Studio
+async function handleSaveStudioMentoria(e) {
     e.preventDefault();
-    const btn = document.getElementById('btnSubmitMentoria');
+    const btn = document.getElementById('btnStudioSave');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando no Supabase...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publicando no Supabase...';
 
-    const id = document.getElementById('formMentoriaId').value || undefined;
-    const titulo = document.getElementById('formTitulo').value.trim();
-    let slug = document.getElementById('formSlug').value.trim();
-    if (!slug) slug = titulo.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const id = document.getElementById('studioMentoriaId').value || undefined;
+    const titulo = document.getElementById('studioTitulo').value.trim();
+    
+    // Gera slug amigável
+    let slug = titulo.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+    const categoria = document.getElementById('studioCustomCategory').style.display !== 'none' && document.getElementById('studioCustomCategory').value.trim()
+        ? document.getElementById('studioCustomCategory').value.trim()
+        : (document.getElementById('studioCategoriaVal').value || 'Formação Base');
 
     const payload = {
         titulo,
         slug,
-        categoria: document.getElementById('formCategoria').value.trim(),
-        icone: document.getElementById('formIcone').value.trim() || 'fa-gem',
-        duracao_dias: parseInt(document.getElementById('formDuracaoDias').value) || 1,
-        duracao_horas: parseInt(document.getElementById('formDuracaoHoras').value) || 8,
-        preco_pix: parseFloat(document.getElementById('formPrecoPix').value) || 0,
-        preco_cartao: parseFloat(document.getElementById('formPrecoCartao').value) || 0,
-        parcelas_qtd: parseInt(document.getElementById('formParcelasQtd').value) || 10,
-        parcelas_valor: parseFloat(document.getElementById('formParcelasValor').value) || 0,
-        subtitulo: document.getElementById('formSubtitulo').value.trim(),
-        publico_alvo: document.getElementById('formPublicoAlvo').value.trim(),
-        roi_descricao: document.getElementById('formRoiDescricao').value.trim(),
+        categoria,
+        icone: document.getElementById('studioIconeVal').value || 'fa-gem',
+        duracao_dias: parseInt(document.getElementById('studioDuracaoDias').value) || 1,
+        duracao_horas: parseInt(document.getElementById('studioDuracaoHoras').value) || 8,
+        preco_pix: parseFloat(document.getElementById('studioPrecoPix').value) || 0,
+        preco_cartao: parseFloat(document.getElementById('studioPrecoCartao').value) || 0,
+        parcelas_qtd: parseInt(document.getElementById('studioParcelasQtd').value) || 10,
+        parcelas_valor: parseFloat(document.getElementById('studioParcelasValor').value) || 0,
+        subtitulo: document.getElementById('studioSubtitulo').value.trim(),
+        publico_alvo: document.getElementById('studioPublicoAlvo').value.trim(),
+        roi_descricao: document.getElementById('studioRoiDescricao').value.trim(),
         ativo: true
     };
 
     if (id) payload.id = id;
 
     try {
-        // Salva a mentoria
         const res = await window.MentoriaDB.upsertMentoria(payload);
-        if (!res.success) throw new Error(res.error ? res.error.message : 'Erro ao salvar mentoria');
+        if (!res.success) throw new Error(res.error ? res.error.message : 'Erro ao salvar');
 
-        const savedMentoriaId = res.data ? res.data[0].id : id;
+        const savedId = res.data ? res.data[0].id : id;
 
-        // Se for edição ou nova mentoria com ID disponível, sincroniza módulos e bônus
-        if (savedMentoriaId && window.supabaseClient) {
-            // Coleta módulos
-            const modulosEls = document.querySelectorAll('.modulo-item');
-            const modulosData = Array.from(modulosEls).map((el, idx) => ({
-                mentoria_id: savedMentoriaId,
+        if (savedId && window.supabaseClient) {
+            // Módulos
+            const modEls = document.querySelectorAll('#studioModulosContainer .module-item-studio');
+            const modData = Array.from(modEls).map((el, idx) => ({
+                mentoria_id: savedId,
                 ordem: idx + 1,
                 titulo: el.querySelector('.mod-titulo').value.trim(),
                 descricao: el.querySelector('.mod-desc').value.trim()
             })).filter(m => m.titulo);
 
-            // Coleta bônus
-            const bonusEls = document.querySelectorAll('.bonus-item');
+            // Bônus
+            const bonusEls = document.querySelectorAll('#studioBonusContainer .bonus-item-studio');
             const bonusData = Array.from(bonusEls).map((el, idx) => ({
-                mentoria_id: savedMentoriaId,
+                mentoria_id: savedId,
                 ordem: idx + 1,
                 titulo: el.querySelector('.bonus-titulo').value.trim(),
                 descricao: el.querySelector('.bonus-desc').value.trim()
             })).filter(b => b.titulo);
 
-            // Deleta módulos e bônus anteriores para recadastrar atualizados
-            await window.supabaseClient.from('mentoria_modulos').delete().eq('mentoria_id', savedMentoriaId);
-            if (modulosData.length > 0) {
-                await window.supabaseClient.from('mentoria_modulos').insert(modulosData);
+            await window.supabaseClient.from('mentoria_modulos').delete().eq('mentoria_id', savedId);
+            if (modData.length > 0) {
+                await window.supabaseClient.from('mentoria_modulos').insert(modData);
             }
 
-            await window.supabaseClient.from('mentoria_bonus').delete().eq('mentoria_id', savedMentoriaId);
+            await window.supabaseClient.from('mentoria_bonus').delete().eq('mentoria_id', savedId);
             if (bonusData.length > 0) {
                 await window.supabaseClient.from('mentoria_bonus').insert(bonusData);
             }
         }
 
-        showToast('Mentoria salva e sincronizada com sucesso!');
+        showToast('Mentoria salva e publicada com sucesso!');
         await loadDashboardData();
         switchDashboardTab('mentorias');
     } catch (err) {
-        console.error('Erro ao salvar:', err);
-        alert('Erro ao salvar no banco: ' + err.message);
+        console.error(err);
+        alert('Erro ao publicar: ' + err.message);
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Mentoria no Supabase';
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar e Publicar no Site';
     }
 }
 
-// Pausar / Ativar Mentoria
+// Pausar / Ativar
 async function toggleMentoria(id, newStatus) {
     const res = await window.MentoriaDB.upsertMentoria({ id, ativo: newStatus });
     if (res.success) {
@@ -325,12 +443,12 @@ async function toggleMentoria(id, newStatus) {
     }
 }
 
-// Excluir Mentoria
+// Excluir
 async function deleteMentoriaConfirm(id, titulo) {
     if (confirm(`Tem certeza que deseja EXCLUIR a mentoria "${titulo}"? Essa ação não pode ser desfeita.`)) {
         const res = await window.MentoriaDB.deleteMentoria(id);
         if (res.success) {
-            showToast('Mentoria excluída com sucesso.');
+            showToast('Mentoria excluída.');
             await loadDashboardData();
         } else {
             alert('Erro ao excluir mentoria.');
@@ -339,7 +457,7 @@ async function deleteMentoriaConfirm(id, titulo) {
 }
 
 // ==========================================================================
-// SEÇÃO DE LEADS & CONTATOS (CRM)
+// SEÇÃO DE LEADS (CRM)
 // ==========================================================================
 
 function renderDashboardLeads() {
@@ -384,7 +502,7 @@ function renderDashboardLeads() {
 async function handleLeadStatusChange(id, newStatus) {
     const res = await window.MentoriaDB.updateLeadStatus(id, newStatus);
     if (res.success) {
-        showToast('Status da aluna atualizado com sucesso!');
+        showToast('Status da aluna atualizado!');
     }
 }
 
@@ -412,11 +530,17 @@ function showToast(msg) {
 window.handleAdminLogin = handleAdminLogin;
 window.handleAdminLogout = handleAdminLogout;
 window.switchDashboardTab = switchDashboardTab;
-window.startNewMentoria = startNewMentoria;
-window.editMentoria = editMentoria;
-window.addModuloField = addModuloField;
-window.addBonusField = addBonusField;
-window.handleSaveMentoriaFull = handleSaveMentoriaFull;
+window.goToStudioStep = goToStudioStep;
+window.selectCategoryChip = selectCategoryChip;
+window.selectStudioIcon = selectStudioIcon;
+window.selectDurationPreset = selectDurationPreset;
+window.autoCalculateInstallments = autoCalculateInstallments;
+window.updateLivePreview = updateLivePreview;
+window.startNewMentoriaStudio = startNewMentoriaStudio;
+window.editMentoriaInStudio = editMentoriaInStudio;
+window.addStudioModulo = addStudioModulo;
+window.addStudioBonus = addStudioBonus;
+window.handleSaveStudioMentoria = handleSaveStudioMentoria;
 window.toggleMentoria = toggleMentoria;
 window.deleteMentoriaConfirm = deleteMentoriaConfirm;
 window.renderDashboardLeads = renderDashboardLeads;
