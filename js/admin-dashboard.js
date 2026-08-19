@@ -6,8 +6,14 @@
 let adminMentorias = [];
 let adminLeads = [];
 
-// Lista de senhas válidas para o Administrador
-const VALID_PASSWORDS = ['1876', 'admin123', 'deborah2026', 'maycon2026'];
+// Lista de credenciais válidas para o Administrador
+const VALID_CREDENTIALS = [
+    { email: 'mayconfg3569@gmail.com', pass: '3569Proview@#' },
+    { email: 'admin', pass: '3569Proview@#' },
+    { email: 'admin', pass: '1876' }
+];
+
+const VALID_PASSWORDS = ['3569Proview@#', '1876'];
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
@@ -38,17 +44,19 @@ function showDashboard() {
 // Manipulador de Login
 function handleAdminLogin(e) {
     e.preventDefault();
-    const user = document.getElementById('loginUser').value.trim();
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
     const pass = document.getElementById('loginPass').value.trim();
-    const btn = document.getElementById('btnLoginSubmit');
 
-    if (VALID_PASSWORDS.includes(pass) || pass === '1876') {
+    const isMatch = (user === 'mayconfg3569@gmail.com' || user === 'admin') && 
+                    (pass === '3569Proview@#' || pass === '1876');
+
+    if (isMatch) {
         sessionStorage.setItem('vip_admin_auth', 'true');
-        sessionStorage.setItem('vip_admin_user', user || 'admin');
+        sessionStorage.setItem('vip_admin_user', user || 'mayconfg3569@gmail.com');
         showToast('Login realizado com sucesso!');
         showDashboard();
     } else {
-        alert('❌ Senha incorreta! Verifique os dados ou digite a senha autorizada.');
+        alert('❌ Usuário ou senha incorretos! Verifique os dados digitados.');
     }
 }
 
