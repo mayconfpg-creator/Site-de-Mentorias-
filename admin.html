@@ -203,6 +203,50 @@
             box-shadow: 0 4px 15px rgba(184, 151, 108, 0.25);
         }
 
+        /* FORMULÁRIOS & CAMPOS DO ADMIN */
+        .admin-form-group {
+            margin-bottom: 18px;
+        }
+
+        .admin-form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #F3EFEA;
+            margin-bottom: 8px;
+        }
+
+        .admin-form-group label i {
+            color: var(--primary);
+            font-size: 13px;
+        }
+
+        .admin-form-group input,
+        .admin-form-group select,
+        .admin-form-group textarea {
+            width: 100%;
+            background: #110F0D;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            color: #FFF;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-family: inherit;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .admin-form-group input:focus,
+        .admin-form-group select:focus,
+        .admin-form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--gold-glow);
+            background: #151311;
+        }
+
         /* ==========================================================================
            STUDIO DE CRIAÇÃO & EDIÇÃO VIP (SPLIT SCREEN & LIVE PREVIEW)
            ========================================================================== */
@@ -400,8 +444,8 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-left: 3px solid var(--primary);
             border-radius: var(--radius-sm);
-            padding: 12px 14px;
-            margin-bottom: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
             position: relative;
         }
 
@@ -418,6 +462,94 @@
             color: var(--primary-light);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .module-item-studio input.mod-titulo,
+        .module-item-studio input.bonus-titulo {
+            width: 100%;
+            background: #12100E;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #FFF;
+            padding: 9px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .module-item-studio input.mod-titulo:focus,
+        .module-item-studio input.bonus-titulo:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .module-item-studio textarea.mod-desc,
+        .module-item-studio textarea.bonus-desc {
+            width: 100%;
+            background: #12100E;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #D6CCC2;
+            padding: 9px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .module-item-studio textarea.mod-desc:focus,
+        .module-item-studio textarea.bonus-desc:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .btn-add-dynamic {
+            background: rgba(184, 151, 108, 0.12);
+            border: 1.5px dashed var(--primary);
+            color: var(--primary-light);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+
+        .btn-add-dynamic:hover {
+            background: rgba(184, 151, 108, 0.25);
+            color: #FFF;
+            border-style: solid;
+        }
+
+        .btn-remove-item {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #F87171;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-remove-item:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: #FFF;
         }
 
         /* COLUNA DA DIREITA: LIVE PREVIEW STICKY */
@@ -458,6 +590,37 @@
             animation: pulseDot 1.5s infinite;
         }
 
+        /* SELETOR DE MODO DA PRÉVIA */
+        .preview-mode-toggle {
+            display: flex;
+            gap: 4px;
+            background: #24201D;
+            padding: 3px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .prev-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .prev-toggle-btn.active {
+            background: linear-gradient(135deg, #DFC8A8, #B8976C);
+            color: #12100E;
+            font-weight: 800;
+        }
+
         /* MODO PREVIEW DO CARD EM TEMPO REAL */
         .preview-card-container {
             background: #FFF;
@@ -467,6 +630,28 @@
             border: 1px solid var(--border-soft);
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             transition: all 0.2s;
+        }
+
+        /* MODO PREVIEW DA EMENTA EM TEMPO REAL */
+        .preview-modal-box {
+            background: #FFF;
+            border-radius: var(--radius-md);
+            padding: 18px;
+            color: var(--text-dark);
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            max-height: 520px;
+            overflow-y: auto;
+            transition: all 0.2s;
+        }
+
+        .preview-modal-box::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .preview-modal-box::-webkit-scrollbar-thumb {
+            background: rgba(184, 151, 108, 0.4);
+            border-radius: 10px;
         }
 
         @keyframes pulseDot {
@@ -816,17 +1001,26 @@
                         </form>
                     </div>
 
-                    <!-- LADO DIREITO: LIVE PREVIEW DO CARD EM TEMPO REAL -->
+                    <!-- LADO DIREITO: LIVE PREVIEW DO CARD / EMENTA EM TEMPO REAL -->
                     <div class="live-preview-panel">
                         <div class="live-preview-header">
                             <div>
-                                <span class="live-preview-badge"><i class="fa-solid fa-circle"></i> Prévia em Tempo Real</span>
-                                <h4 style="font-size: 13.5px; color: #FFF; font-weight: 800; margin-top: 4px;">Como a Aluna verá no Site:</h4>
+                                <span class="live-preview-badge"><i class="fa-solid fa-circle"></i> Ao Vivo</span>
+                                <h4 style="font-size: 13.5px; color: #FFF; font-weight: 800; margin-top: 4px;">Prévia em Tempo Real:</h4>
+                            </div>
+                            <!-- BOTÕES DE TROCA DA PRÉVIA (CARD VS EMENTA) -->
+                            <div class="preview-mode-toggle">
+                                <button type="button" class="prev-toggle-btn active" id="btnPrevCard" onclick="setPreviewMode('card')">
+                                    <i class="fa-solid fa-id-card"></i> Card
+                                </button>
+                                <button type="button" class="prev-toggle-btn" id="btnPrevModal" onclick="setPreviewMode('modal')">
+                                    <i class="fa-solid fa-book-open"></i> Ementa
+                                </button>
                             </div>
                         </div>
 
-                        <!-- CARD RENDERIZADO AO VIVO -->
-                        <div class="preview-card-container">
+                        <!-- MODO 1: PREVIEW DO CARD PÚBLICO -->
+                        <div id="previewCardContainer" class="preview-card-container">
                             <div class="card-top-row">
                                 <span class="card-badge" id="prevBadge" style="background: rgba(184, 151, 108, 0.15); color: var(--primary-dark);">
                                     <i class="fa-solid fa-gem" id="prevIcon"></i> <span id="prevCategory">Formação Base</span>
@@ -859,13 +1053,64 @@
                             </div>
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <button type="button" style="background: var(--bg-sand); border: 1px solid var(--border-soft); color: var(--text-dark); padding: 9px; border-radius: 8px; font-size: 11.5px; font-weight: 700;">
+                                <button type="button" onclick="setPreviewMode('modal')" style="background: var(--bg-sand); border: 1px solid var(--border-soft); color: var(--text-dark); padding: 9px; border-radius: 8px; font-size: 11.5px; font-weight: 700; cursor: pointer;">
                                     <i class="fa-solid fa-eye"></i> Ver Ementa
                                 </button>
-                                <button type="button" style="background: #22C55E; color: #12100E; border: none; padding: 9px; border-radius: 8px; font-size: 11.5px; font-weight: 800;">
+                                <button type="button" style="background: #22C55E; color: #12100E; border: none; padding: 9px; border-radius: 8px; font-size: 11.5px; font-weight: 800; cursor: pointer;">
                                     <i class="fa-brands fa-whatsapp"></i> Garantir Vaga
                                 </button>
                             </div>
+                        </div>
+
+                        <!-- MODO 2: PREVIEW DA EMENTA / MODAL COMPLETO -->
+                        <div id="previewModalContainer" class="preview-modal-box" style="display: none;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span class="card-duration" id="prevModalDuration" style="margin: 0; font-size: 11.5px;">
+                                    <i class="fa-regular fa-clock"></i> 1 Dia (8h)
+                                </span>
+                                <span class="card-badge" id="prevModalBadge" style="background: rgba(184, 151, 108, 0.15); color: var(--primary-dark); font-size: 10.5px;">
+                                    <i class="fa-solid fa-gem" id="prevModalIcon"></i> <span id="prevModalCategory">Formação Base</span>
+                                </span>
+                            </div>
+
+                            <h3 id="prevModalTitle" style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px;">Título da Mentoria</h3>
+                            <p id="prevModalSubtitle" style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Subtítulo e diferencial exclusivo.</p>
+
+                            <div style="background: #FDF9F3; border-left: 3px solid var(--primary); padding: 8px 10px; border-radius: 4px; margin-bottom: 12px;">
+                                <strong style="color: var(--primary-dark); font-size: 11px; display: block; margin-bottom: 2px;">🎯 Público-Alvo:</strong>
+                                <p id="prevModalPublico" style="font-size: 11.5px; color: var(--text-dark); margin: 0;">Iniciantes do zero...</p>
+                            </div>
+
+                            <h4 style="font-size: 12px; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Grade Curricular:
+                            </h4>
+                            <div id="prevModalModulosList" style="margin-bottom: 12px;">
+                                <!-- Renderizado dinamicamente -->
+                            </div>
+
+                            <h4 style="font-size: 12px; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-gift" style="color: var(--primary);"></i> Bônus VIP:
+                            </h4>
+                            <div id="prevModalBonusList" style="margin-bottom: 12px;">
+                                <!-- Renderizado dinamicamente -->
+                            </div>
+
+                            <div style="background: var(--bg-dark); color: #FFF; border-radius: 8px; padding: 12px; margin-top: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span id="prevModalPricePix" style="font-size: 17px; font-weight: 800; color: #FFF;">R$ 1.500,00</span>
+                                    <span style="font-size: 11px; color: #86EFAC; font-weight: 700;">no PIX</span>
+                                </div>
+                                <div id="prevModalPriceInstallments" style="font-size: 11px; color: #D6CCC2; margin-top: 2px;">
+                                    ou 10x de R$ 165,00
+                                </div>
+                                <div id="prevModalRoi" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 6px; margin-top: 6px; font-size: 10.5px; color: var(--primary-light);">
+                                    <strong>Retorno Rápido:</strong> Recupera em 10 atendimentos
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="setPreviewMode('card')" style="margin-top: 10px; width: 100%; background: var(--bg-sand); border: 1px solid var(--border-soft); color: var(--text-dark); padding: 7px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;">
+                                <i class="fa-solid fa-arrow-left"></i> Voltar à Visualização do Card
+                            </button>
                         </div>
 
                     </div>

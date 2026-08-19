@@ -149,6 +149,29 @@ function renderDashboardMentorias() {
 // STUDIO VIP — CONTROLES & WIZARD INTELIGENTE
 // ==========================================================================
 
+let currentPreviewMode = 'card';
+
+function setPreviewMode(mode) {
+    currentPreviewMode = mode;
+    const cardEl = document.getElementById('previewCardContainer');
+    const modalEl = document.getElementById('previewModalContainer');
+    const btnCard = document.getElementById('btnPrevCard');
+    const btnModal = document.getElementById('btnPrevModal');
+
+    if (mode === 'modal') {
+        if (cardEl) cardEl.style.display = 'none';
+        if (modalEl) modalEl.style.display = 'block';
+        if (btnCard) btnCard.classList.remove('active');
+        if (btnModal) btnModal.classList.add('active');
+    } else {
+        if (cardEl) cardEl.style.display = 'block';
+        if (modalEl) modalEl.style.display = 'none';
+        if (btnCard) btnCard.classList.add('active');
+        if (btnModal) btnModal.classList.remove('active');
+    }
+    updateLivePreview();
+}
+
 function goToStudioStep(step) {
     currentStudioStep = step;
     document.querySelectorAll('.studio-step-section').forEach(el => el.classList.remove('active'));
@@ -159,6 +182,15 @@ function goToStudioStep(step) {
 
     const btn = document.getElementById(`stepBtn-${step}`);
     if (btn) btn.classList.add('active');
+
+    // Troca inteligente da prévia em tempo real:
+    // Passos 1, 2 e 3 -> Card Preview
+    // Passo 4 (Grade & Bônus) -> Ementa Completa Preview
+    if (step === 4) {
+        setPreviewMode('modal');
+    } else {
+        setPreviewMode('card');
+    }
 }
 
 // Seleção de Chip de Categoria
@@ -216,39 +248,131 @@ function autoCalculateInstallments() {
     updateLivePreview();
 }
 
-// Atualização da Prévia em Tempo Real (Live Preview Reactivity)
+// Atualização da Prévia em Tempo Real (Live Preview Reactivity Completa)
 function updateLivePreview() {
-    const titulo = document.getElementById('studioTitulo').value.trim() || 'Nome da Mentoria';
-    const subtitulo = document.getElementById('studioSubtitulo').value.trim() || 'Subtítulo do curso e diferencial exclusivo.';
-    const publico = document.getElementById('studioPublicoAlvo').value.trim() || 'Iniciantes ou profissionais que buscam excelência.';
-    const categoria = document.getElementById('studioCustomCategory').style.display !== 'none' && document.getElementById('studioCustomCategory').value.trim()
-        ? document.getElementById('studioCustomCategory').value.trim()
-        : (document.getElementById('studioCategoriaVal').value || 'Formação Base');
-    const icone = document.getElementById('studioIconeVal').value || 'fa-gem';
+    const titulo = document.getElementById('studioTitulo')?.value.trim() || 'Nome da Mentoria';
+    const subtitulo = document.getElementById('studioSubtitulo')?.value.trim() || 'Subtítulo do curso e diferencial exclusivo.';
+    const publico = document.getElementById('studioPublicoAlvo')?.value.trim() || 'Iniciantes ou profissionais que buscam excelência.';
+    const customCat = document.getElementById('studioCustomCategory');
+    const categoria = customCat && customCat.style.display !== 'none' && customCat.value.trim()
+        ? customCat.value.trim()
+        : (document.getElementById('studioCategoriaVal')?.value || 'Formação Base');
+    const icone = document.getElementById('studioIconeVal')?.value || 'fa-gem';
     
-    const dias = document.getElementById('studioDuracaoDias').value || 1;
-    const horas = document.getElementById('studioDuracaoHoras').value || 8;
+    const dias = parseInt(document.getElementById('studioDuracaoDias')?.value) || 1;
+    const horas = parseInt(document.getElementById('studioDuracaoHoras')?.value) || 8;
 
-    const precoPix = parseFloat(document.getElementById('studioPrecoPix').value) || 0;
-    const parcelasQtd = document.getElementById('studioParcelasQtd').value || 10;
-    const parcelasValor = parseFloat(document.getElementById('studioParcelasValor').value) || 0;
+    const precoPix = parseFloat(document.getElementById('studioPrecoPix')?.value) || 0;
+    const parcelasQtd = parseInt(document.getElementById('studioParcelasQtd')?.value) || 10;
+    const parcelasValor = parseFloat(document.getElementById('studioParcelasValor')?.value) || 0;
+    const roi = document.getElementById('studioRoiDescricao')?.value.trim() || 'Recuperação rápida do investimento com poucos atendimentos.';
 
-    const modulosQtd = document.querySelectorAll('.module-item-studio').length;
-    const bonusQtd = document.querySelectorAll('.bonus-item-studio').length;
+    // Coleta módulos
+    const modEls = document.querySelectorAll('#studioModulosContainer .module-item-studio');
+    const modulosList = Array.from(modEls).map((el, idx) => ({
+        num: idx + 1,
+        titulo: el.querySelector('.mod-titulo')?.value.trim() || `Módulo ${idx + 1}`,
+        desc: el.querySelector('.mod-desc')?.value.trim() || ''
+    }));
 
-    // Atualiza elementos do Card Preview
-    document.getElementById('prevTitle').innerText = titulo;
-    document.getElementById('prevSubtitle').innerText = subtitulo;
-    document.getElementById('prevPublico').innerText = publico.length > 80 ? publico.substring(0, 80) + '...' : publico;
-    document.getElementById('prevCategory').innerText = categoria;
-    document.getElementById('prevIcon').className = `fa-solid ${icone}`;
-    document.getElementById('prevDuration').innerHTML = `<i class="fa-regular fa-clock"></i> ${dias} ${dias == 1 ? 'Dia' : 'Dias'} (${horas}h)`;
-    
-    document.getElementById('prevPricePix').innerText = precoPix.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    document.getElementById('prevPriceInstallments').innerHTML = `ou ${parcelasQtd}x de <strong style="color: var(--primary-light);">${parcelasValor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong> no cartão`;
+    // Coleta bônus
+    const bonusEls = document.querySelectorAll('#studioBonusContainer .bonus-item-studio');
+    const bonusList = Array.from(bonusEls).map((el, idx) => ({
+        num: idx + 1,
+        titulo: el.querySelector('.bonus-titulo')?.value.trim() || `Bônus VIP ${idx + 1}`,
+        desc: el.querySelector('.bonus-desc')?.value.trim() || ''
+    }));
 
-    document.getElementById('prevModCount').innerText = modulosQtd;
-    document.getElementById('prevBonusCount').innerText = bonusQtd;
+    // 1. Atualiza Card Preview
+    const prevTitle = document.getElementById('prevTitle');
+    if (prevTitle) prevTitle.innerText = titulo;
+
+    const prevSub = document.getElementById('prevSubtitle');
+    if (prevSub) prevSub.innerText = subtitulo;
+
+    const prevPub = document.getElementById('prevPublico');
+    if (prevPub) prevPub.innerText = publico.length > 80 ? publico.substring(0, 80) + '...' : publico;
+
+    const prevCat = document.getElementById('prevCategory');
+    if (prevCat) prevCat.innerText = categoria;
+
+    const prevIcon = document.getElementById('prevIcon');
+    if (prevIcon) prevIcon.className = `fa-solid ${icone}`;
+
+    const prevDur = document.getElementById('prevDuration');
+    if (prevDur) prevDur.innerHTML = `<i class="fa-regular fa-clock"></i> ${dias} ${dias === 1 ? 'Dia' : 'Dias'} (${horas}h)`;
+
+    const prevPricePix = document.getElementById('prevPricePix');
+    if (prevPricePix) prevPricePix.innerText = precoPix.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    const prevPriceInst = document.getElementById('prevPriceInstallments');
+    if (prevPriceInst) prevPriceInst.innerHTML = `ou ${parcelasQtd}x de <strong style="color: var(--primary-light);">${parcelasValor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong> no cartão`;
+
+    const prevModCount = document.getElementById('prevModCount');
+    if (prevModCount) prevModCount.innerText = modulosList.length;
+
+    const prevBonusCount = document.getElementById('prevBonusCount');
+    if (prevBonusCount) prevBonusCount.innerText = bonusList.length;
+
+    // 2. Atualiza Modal / Ementa Preview
+    const prevModalTitle = document.getElementById('prevModalTitle');
+    if (prevModalTitle) prevModalTitle.innerText = titulo;
+
+    const prevModalSub = document.getElementById('prevModalSubtitle');
+    if (prevModalSub) prevModalSub.innerText = subtitulo;
+
+    const prevModalPub = document.getElementById('prevModalPublico');
+    if (prevModalPub) prevModalPub.innerText = publico;
+
+    const prevModalCat = document.getElementById('prevModalCategory');
+    if (prevModalCat) prevModalCat.innerText = categoria;
+
+    const prevModalIco = document.getElementById('prevModalIcon');
+    if (prevModalIco) prevModalIco.className = `fa-solid ${icone}`;
+
+    const prevModalDur = document.getElementById('prevModalDuration');
+    if (prevModalDur) prevModalDur.innerHTML = `<i class="fa-regular fa-clock"></i> ${dias} ${dias === 1 ? 'Dia' : 'Dias'} (${horas}h de prática)`;
+
+    const prevModalPix = document.getElementById('prevModalPricePix');
+    if (prevModalPix) prevModalPix.innerText = precoPix.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    const prevModalInst = document.getElementById('prevModalPriceInstallments');
+    if (prevModalInst) prevModalInst.innerText = `ou ${parcelasQtd}x de ${parcelasValor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} no cartão`;
+
+    const prevModalRoi = document.getElementById('prevModalRoi');
+    if (prevModalRoi) prevModalRoi.innerHTML = `<strong>Retorno Rápido:</strong> ${roi}`;
+
+    // Renderiza lista de módulos na ementa
+    const prevModalMods = document.getElementById('prevModalModulosList');
+    if (prevModalMods) {
+        if (modulosList.length === 0) {
+            prevModalMods.innerHTML = '<p style="font-size: 11px; color: var(--text-muted);">Nenhum módulo adicionado ainda.</p>';
+        } else {
+            prevModalMods.innerHTML = modulosList.map(m => `
+                <div style="background: var(--bg-sand); border: 1px solid var(--border-soft); border-radius: 6px; padding: 7px 9px; margin-bottom: 5px;">
+                    <strong style="color: var(--primary-dark); font-size: 11.5px; display: block;">${m.num}. ${m.titulo}</strong>
+                    ${m.desc ? `<p style="font-size: 11px; color: var(--text-dark); margin: 0; line-height: 1.35;">${m.desc}</p>` : ''}
+                </div>
+            `).join('');
+        }
+    }
+
+    // Renderiza lista de bônus na ementa
+    const prevModalBons = document.getElementById('prevModalBonusList');
+    if (prevModalBons) {
+        if (bonusList.length === 0) {
+            prevModalBons.innerHTML = '<p style="font-size: 11px; color: var(--text-muted);">Nenhum bônus adicionado.</p>';
+        } else {
+            prevModalBons.innerHTML = bonusList.map(b => `
+                <div style="background: linear-gradient(135deg, #FCFBF9, #F6EFE6); border: 1px solid var(--accent-gold); border-radius: 6px; padding: 7px 9px; margin-bottom: 5px;">
+                    <strong style="color: var(--text-dark); font-size: 11.5px; display: flex; align-items: center; gap: 4px;">
+                        <i class="fa-solid fa-gift" style="color: var(--primary); font-size: 10px;"></i> ${b.titulo}
+                    </strong>
+                    ${b.desc ? `<p style="font-size: 11px; color: var(--text-dark); margin-top: 2px; line-height: 1.3;">${b.desc}</p>` : ''}
+                </div>
+            `).join('');
+        }
+    }
 }
 
 // Iniciar Criação de Nova Mentoria no Studio
@@ -530,6 +654,7 @@ function showToast(msg) {
 window.handleAdminLogin = handleAdminLogin;
 window.handleAdminLogout = handleAdminLogout;
 window.switchDashboardTab = switchDashboardTab;
+window.setPreviewMode = setPreviewMode;
 window.goToStudioStep = goToStudioStep;
 window.selectCategoryChip = selectCategoryChip;
 window.selectStudioIcon = selectStudioIcon;
@@ -546,4 +671,5 @@ window.deleteMentoriaConfirm = deleteMentoriaConfirm;
 window.renderDashboardLeads = renderDashboardLeads;
 window.handleLeadStatusChange = handleLeadStatusChange;
 window.handleSaveConfig = handleSaveConfig;
+
 
